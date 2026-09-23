@@ -532,7 +532,7 @@ body {
         <h2>Профиль жана Админ</h2>
         <p style="color: #4b5563;">VIP кызмат боюнча байланышуу: <b>+996 998 270 997</b></p>
         <div id="adminLoginArea" style="margin-top: 15px;">
-            <input id="adminPasswordInput" type="password" placeholder="Админ пароль (7777)" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 80%; max-width: 250px;"><br><br>
+            <input id="adminPasswordInput" type="password" placeholder="Админ пароль" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 80%; max-width: 250px;"><br><br>
             <button class="button filter-btn" onclick="loginAdmin()">Кирүү</button>
         </div>
         <div id="adminStatusArea" style="display:none; margin-top: 15px;">
@@ -556,6 +556,9 @@ body {
 let adsData=[], chatsData={}, activeChatId=null, currentCategoryFilter='Баары', isAdminLoggedIn=false, currentDetailIndex=null;
 const KEY='leyAdsArrayProMax';
 const CHAT_KEY='leyChatsDataProMax';
+
+// Сиздин өзгөчө админ сырсөзүңүз (ушул жерден өзгөртүп койсоңуз болот):
+const adminSecretPassword = 'LeyAdmin2026!'; 
 
 function initApp(){
 try{adsData=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){adsData=[]}
@@ -638,7 +641,7 @@ let adminBtns = isAdminLoggedIn ?
 document.getElementById('detailContent').innerHTML=
     vipBadgeHtml+
     '<div class="detail-images">'+imgs+'</div>'+
-    '<h2>'+esc(a.title)+'</h2>'+
+    '## '+esc(a.title)+''+
     '<p class="price">'+esc(a.priceStr)+'</p>'+
     '<p>📍 '+esc(a.city)+'</p>'+car+
     '<p>'+esc(a.desc)+'</p>'+
@@ -813,10 +816,11 @@ toggleCarFields()
 }
 
 function loginAdmin(){
-    if(val('adminPasswordInput')==='7777'){
+    if(val('adminPasswordInput') === adminSecretPassword){
         isAdminLoggedIn=true;
         adminLoginArea.style.display='none';
         adminStatusArea.style.display='block';
+        document.getElementById('adminPasswordInput').value = '';
         alert('Админ режими күйдү! Эми жарыяларга кирип VIP статус бере аласыз.');
     } else {
         alert('Пароль туура эмес!');

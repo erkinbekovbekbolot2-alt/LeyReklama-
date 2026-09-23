@@ -193,10 +193,30 @@ body {
     padding: 16px;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 .ad-box:active {
     transform: scale(0.98);
 }
+
+/* VIP Жарыя Стили */
+.ad-box.vip-ad {
+    border: 2px solid #f59e0b;
+    background: linear-gradient(135deg, rgba(254, 243, 199, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+}
+.vip-badge {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
 .ad-images-preview, .detail-images {
     display: flex;
     gap: 8px;
@@ -217,7 +237,7 @@ body {
 }
 .top-card-badges {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 }
 .fav-icon {
@@ -283,20 +303,23 @@ body {
 
 .admin-actions {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 20px;
 }
-.edit-btn, .delete-btn {
+.edit-btn, .delete-btn, .vip-btn {
     border: 0;
     color: #fff;
-    padding: 10px 16px;
+    padding: 10px 14px;
     border-radius: 8px;
     font-weight: 600;
     flex: 1;
+    min-width: 100px;
     cursor: pointer;
 }
 .edit-btn { background: #f59e0b; }
 .delete-btn { background: #ef4444; }
+.vip-btn { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
 
 /* Bottom Navbar */
 .bottom-nav {
@@ -334,7 +357,7 @@ body {
     margin-bottom: 2px;
 }
 
-/* Floating Plus Button - Ортодо */
+/* Floating Plus Button */
 .fab-btn {
     width: 52px;
     height: 52px;
@@ -432,7 +455,7 @@ body {
     <div class="category-item" onclick="filterCategory('Жумуш')"><div class="category-circle">💼</div><span>Жумуш</span></div>
     <div class="category-item" onclick="filterCategory('Мүлк')"><div class="category-circle">🏠</div><span>Мүлк</span></div>
 </div>
-<h2 style="font-size: 18px; margin: 0 0 12px 4px; color: #374151;">Акыркы жарыялар</h2>
+<h2 style="font-size: 18px; margin: 0 0 12px 4px; color: #374151;">Бардык жарыялар</h2>
 <div id="adsList" class="ad-grid"></div>
 </section>
 
@@ -463,12 +486,10 @@ body {
     </div>
     <input id="cityInput" placeholder="Шаар / область">
     <input id="phoneInput" placeholder="Сиздин номериңиз">
-    <label>4 орундуу PIN-код:</label>
-    <input id="pinInput" type="password" maxlength="4" placeholder="1234">
     <textarea id="descInput" rows="3" placeholder="Толук маалымат..."></textarea>
     <label>Сүрөттөр (10го чейин):</label>
     <input id="imageInput" type="file" multiple accept="image/*">
-    <button onclick="processAd()" style="width: 100%; margin-top: 10px;">💬 WhatsApp аркылуу жөнөтүү</button>
+    <button onclick="processAd()" style="width: 100%; margin-top: 10px;">💾 Жарыяны сактоо</button>
 </div>
 </section>
 
@@ -484,7 +505,7 @@ body {
     <div id="favList" class="ad-grid"></div>
 </section>
 
-<!-- Чат (Билдирүүлөр) экраны -->
+<!-- Чат экраны -->
 <section id="chatsScreen" class="page-section">
     <h2 style="font-size: 18px; margin: 0 0 12px 4px; color: #374151;">Билдирүүлөр / СМС</h2>
     <div class="chat-box" style="padding: 15px;">
@@ -509,19 +530,20 @@ body {
 <section id="profileScreen" class="page-section">
     <div class="profile-card" style="padding:24px;text-align:center">
         <h2>Профиль жана Админ</h2>
-        <p style="color: #4b5563;">WhatsApp номер: <b>+996 998 270 997</b></p>
+        <p style="color: #4b5563;">VIP кызмат боюнча байланышуу: <b>+996 998 270 997</b></p>
         <div id="adminLoginArea" style="margin-top: 15px;">
-            <input id="adminPasswordInput" type="password" placeholder="Админ пароль" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 80%; max-width: 250px;"><br><br>
+            <input id="adminPasswordInput" type="password" placeholder="Админ пароль (7777)" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 80%; max-width: 250px;"><br><br>
             <button class="button filter-btn" onclick="loginAdmin()">Кирүү</button>
         </div>
         <div id="adminStatusArea" style="display:none; margin-top: 15px;">
-            <p style="color:#10b981; font-weight: bold;">✅ Админ режими күйдү</p>
+            <p style="color:#10b981; font-weight: bold;">✅ Админ режими иштеп жатат</p>
+            <p style="font-size: 13px; color: #6b7280;">Сиз эми жарыялардын ичине кирип VIP берсеңиз болот.</p>
             <button class="button delete-btn" onclick="logoutAdmin()">Чыгуу</button>
         </div>
     </div>
 </section>
 
-<!-- Навигация панели (Жаңы катар тартиби) -->
+<!-- Навигация панели -->
 <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchPage('homeScreen',this)"><div>🏠</div>Башкы бет</button>
     <button class="nav-item" onclick="switchPage('favScreen',this);renderFavorites()"><div>❤️</div>Тандалма</button>
@@ -540,12 +562,18 @@ try{adsData=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){adsData=[]}
 try{chatsData=JSON.parse(localStorage.getItem(CHAT_KEY)||'{}')}catch(e){chatsData={}}
 
 if(!adsData.length){
-adsData=[{id:Date.now(),title:'iPhone 13 Pro',rawPrice:45000,currency:'сом',priceStr:'45 000 сом',city:'Бишкек',phone:'+996555123456',category:'Телефон',desc:'Абалы жакшы, память 128GB.',images:[],carDetails:null,pin:'1234',isFav:false}]
+adsData=[{id:Date.now(),title:'iPhone 13 Pro',rawPrice:45000,currency:'сом',priceStr:'45 000 сом',city:'Бишкек',phone:'+996555123456',category:'Телефон',desc:'Абалы жакшы, память 128GB.',images:[],carDetails:null,isFav:false,isVip:true}]
 }
 renderAds();
 }
 
-function save(){localStorage.setItem(KEY,JSON.stringify(adsData))}
+function save(){
+try {
+    localStorage.setItem(KEY,JSON.stringify(adsData));
+} catch(e) {
+    alert("Эс тутум толду! Эски жарыяларды өчүрүңүз.");
+}
+}
 function saveChats(){localStorage.setItem(CHAT_KEY,JSON.stringify(chatsData))}
 
 function switchPage(id,el){
@@ -563,9 +591,17 @@ function renderAds(){
 let q=document.getElementById('searchInput').value.toLowerCase();
 let list=adsData.filter(a=>(currentCategoryFilter==='Баары'||a.category===currentCategoryFilter)&&a.title.toLowerCase().includes(q));
 let sort=document.getElementById('sortSelect').value;
-if(sort==='price-asc')list.sort((a,b)=>a.rawPrice-b.rawPrice);
-else if(sort==='price-desc')list.sort((a,b)=>b.rawPrice-a.rawPrice);
-else list.sort((a,b)=>b.id-a.id);
+
+// Сорттоо (VIP жарыялар ар дайым эң жогоруда чыгат)
+list.sort((a,b)=>{
+    if(a.isVip && !b.isVip) return -1;
+    if(!a.isVip && b.isVip) return 1;
+    
+    if(sort==='price-asc') return a.rawPrice - b.rawPrice;
+    if(sort==='price-desc') return b.rawPrice - a.rawPrice;
+    return b.id - a.id;
+});
+
 document.getElementById('resultCount').textContent='Табылды: '+list.length+' жарыя';
 document.getElementById('adsList').innerHTML=list.length?list.map(a=>cardHTML(a)).join(''):'<div class="empty">Бул категорияда азырынча жарыя жок.</div>'
 }
@@ -573,7 +609,10 @@ document.getElementById('adsList').innerHTML=list.length?list.map(a=>cardHTML(a)
 function cardHTML(a){
 let i=adsData.indexOf(a);
 let imgs=(a.images||[]).map(x=>'<img class="ad-thumb" src="'+x+'">').join('');
-return '<div class="ad-box" onclick="openDetail('+i+')">'+(imgs?'<div class="ad-images-preview">'+imgs+'</div>':'')+'<div class="top-card-badges"><button class="fav-icon '+(a.isFav?'active':'')+'" onclick="toggleFav(event,'+i+')">❤️</button></div><h3>'+esc(a.title)+'</h3><p class="price">'+esc(a.priceStr)+'</p><p class="city">📍 '+esc(a.city||'')+'</p></div>'
+let vipBadge = a.isVip ? '<span class="vip-badge">⭐ VIP</span>' : '<span></span>';
+let vipClass = a.isVip ? 'vip-ad' : '';
+
+return '<div class="ad-box '+vipClass+'" onclick="openDetail('+i+')">'+(imgs?'<div class="ad-images-preview">'+imgs+'</div>':'')+'<div class="top-card-badges">'+vipBadge+'<button class="fav-icon '+(a.isFav?'active':'')+'" onclick="toggleFav(event,'+i+')">❤️</button></div><h3>'+esc(a.title)+'</h3><p class="price">'+esc(a.priceStr)+'</p><p class="city">📍 '+esc(a.city||'')+'</p></div>'
 }
 
 function renderFavorites(){
@@ -588,8 +627,34 @@ currentDetailIndex=i;
 let a=adsData[i];
 let imgs=(a.images||[]).map(x=>'<img class="detail-img" src="'+x+'">').join('');
 let car=a.carDetails?'<p><b>Унаа:</b> '+esc(a.carDetails.brand)+' '+esc(a.carDetails.model)+' ('+esc(a.carDetails.year)+'), '+esc(a.carDetails.steering)+'</p>':'';
-document.getElementById('detailContent').innerHTML='<div class="detail-images">'+imgs+'</div><h2>'+esc(a.title)+'</h2><p class="price">'+esc(a.priceStr)+'</p><p>📍 '+esc(a.city)+'</p>'+car+'<p>'+esc(a.desc)+'</p><button class="chat-btn-action" onclick="startChatWithSeller('+i+')">💬 Ээсине СМС жазуу (Баасын суроо)</button><a class="call-btn" href="tel:'+esc(a.phone)+'">📞 '+esc(a.phone)+' — Чалуу</a><div class="admin-actions"><button class="edit-btn" onclick="checkPinAndEdit()">✏️ Өзгөртүү</button><button class="delete-btn" onclick="checkPinAndDelete()">🗑️ Өчүрүү</button></div>';
+let vipBadgeHtml = a.isVip ? '<span class="vip-badge" style="font-size:14px; padding: 5px 10px; margin-bottom: 10px;">⭐ VIP Жарыя</span>' : '';
+
+let adminBtns = isAdminLoggedIn ? 
+    '<button class="vip-btn" onclick="toggleVipStatus('+i+')">'+(a.isVip?'⭐ VIP Алып салуу':'⭐ VIP Жасоо')+'</button>' +
+    '<button class="edit-btn" onclick="editAd('+i+')">✏️ Өзгөртүү</button>' +
+    '<button class="delete-btn" onclick="deleteAd('+i+')">🗑️ Өчүрүү</button>' 
+    : '';
+
+document.getElementById('detailContent').innerHTML=
+    vipBadgeHtml+
+    '<div class="detail-images">'+imgs+'</div>'+
+    '<h2>'+esc(a.title)+'</h2>'+
+    '<p class="price">'+esc(a.priceStr)+'</p>'+
+    '<p>📍 '+esc(a.city)+'</p>'+car+
+    '<p>'+esc(a.desc)+'</p>'+
+    '<button class="chat-btn-action" onclick="startChatWithSeller('+i+')">💬 Ээсине СМС жазуу (Баасын суроо)</button>'+
+    '<a class="call-btn" href="tel:'+esc(a.phone)+'">📞 '+esc(a.phone)+' — Чалуу</a>'+
+    '<div class="admin-actions">'+adminBtns+'</div>';
+
 switchPage('detailScreen')
+}
+
+/* VIP кабыл алуу логикасы */
+function toggleVipStatus(i){
+adsData[i].isVip = !adsData[i].isVip;
+save();
+alert(adsData[i].isVip ? 'Жарыяга VIP статус берилди!' : 'VIP статус алынды.');
+openDetail(i);
 }
 
 /* Chat Logic */
@@ -651,8 +716,14 @@ return '<div class="chat-item" onclick="activeChatId=\''+k+'\';openChatDetail()"
 }).join('');
 }
 
-function checkPinAndEdit(){let a=adsData[currentDetailIndex];let p=isAdminLoggedIn?'7777':prompt('PIN-кодду киргизиңиз:');if(isAdminLoggedIn||p===a.pin)editAd(currentDetailIndex);else if(p!==null)alert('PIN-код туура эмес!')}
-function checkPinAndDelete(){let a=adsData[currentDetailIndex];let p=isAdminLoggedIn?'7777':prompt('PIN-кодду киргизиңиз:');if(isAdminLoggedIn||p===a.pin){if(confirm('Бул жарыя өчүрүлсүнбү?')){adsData.splice(currentDetailIndex,1);save();renderAds();switchPage('homeScreen')}}else if(p!==null)alert('PIN-код туура эмес!')}
+function deleteAd(i){
+if(confirm('Бул жарыя өчүрүлсүнбү?')){
+    adsData.splice(i,1);
+    save();
+    renderAds();
+    switchPage('homeScreen');
+}
+}
 
 function editAd(i){
 let a=adsData[i];
@@ -662,7 +733,6 @@ document.getElementById('priceInput').value=a.rawPrice;
 document.getElementById('currencySelect').value=a.currency;
 document.getElementById('cityInput').value=a.city;
 document.getElementById('phoneInput').value=a.phone;
-document.getElementById('pinInput').value=a.pin;
 document.getElementById('catSelect').value=a.category;
 document.getElementById('descInput').value=a.desc;
 toggleCarFields();
@@ -676,9 +746,38 @@ document.getElementById('formTitle').textContent='Жарыяны өзгөртү�
 switchPage('addAdScreen')
 }
 
+// Сүрөттү кичирейтүү
+function compressImage(file) {
+    return new Promise((resolve) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            let img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                let canvas = document.createElement('canvas');
+                let maxWidth = 600;
+                let scale = maxWidth / img.width;
+                
+                if (scale < 1) {
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scale;
+                } else {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                }
+
+                let ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', 0.6));
+            };
+        };
+    });
+}
+
 function processAd(){
-let title=val('titleInput'),price=val('priceInput'),phone=val('phoneInput'),pin=val('pinInput'),category=val('catSelect');
-if(!title||!price||!phone||!pin||pin.length!==4){alert('Аталыш, баа, номер жана 4 орундуу PIN-кодду толтуруңуз!');return}
+let title=val('titleInput'),price=val('priceInput'),phone=val('phoneInput'),category=val('catSelect');
+if(!title||!price||!phone){alert('Аталыш, баа жана номерди толтуруңуз!');return}
 let files=[...document.getElementById('imageInput').files];
 if(files.length>10){alert('10 сүрөттөн ашырбаңыз!');return}
 let car=null;
@@ -688,28 +787,41 @@ if(!car.brand||!car.model||!car.year){alert('Унаанын маркасын, м
 }
 let done=imgs=>{
 let i=document.getElementById('editIndex').value;
-let a={id:i!==''?adsData[i].id:Date.now(),title,rawPrice:Number(price),currency:val('currencySelect'),priceStr:Number(price).toLocaleString()+' '+val('currencySelect'),city:val('cityInput'),phone,pin,category,desc:val('descInput'),images:imgs,carDetails:car,isFav:i!==''?adsData[i].isFav:false};
+let isVipVal = i!=='' ? adsData[i].isVip : false;
+let a={id:i!==''?adsData[i].id:Date.now(),title,rawPrice:Number(price),currency:val('currencySelect'),priceStr:Number(price).toLocaleString()+' '+val('currencySelect'),city:val('cityInput'),phone,category,desc:val('descInput'),images:imgs,carDetails:car,isFav:i!==''?adsData[i].isFav:false,isVip:isVipVal};
 if(i!=='')adsData[i]=a;else adsData.push(a);
 save();
-let text='Саламатсызбы! Жаңы жарыя:\n📌 '+title+'\n💰 '+a.priceStr+'\n📍 '+a.city+'\n📞 '+phone+'\n📝 '+a.desc;
-window.open('https://wa.me/996998270997?text='+encodeURIComponent(text),'_blank');
+alert('Жарыя ийгиликтүү кошулду!');
 clearForm();
 renderAds();
 switchPage('homeScreen')
 };
-if(!files.length)done(document.getElementById('editIndex').value!==''?adsData[document.getElementById('editIndex').value].images||[]:[]);
-else Promise.all(files.map(file=>new Promise(resolve=>{let r=new FileReader();r.onload=e=>resolve(e.target.result);r.readAsDataURL(file)}))).then(done)
+
+if(!files.length) {
+    done(document.getElementById('editIndex').value!==''?adsData[document.getElementById('editIndex').value].images||[]:[]);
+} else {
+    Promise.all(files.map(file=>compressImage(file))).then(done);
+}
 }
 
 function clearForm(){
-['titleInput','priceInput','cityInput','phoneInput','pinInput','descInput','editIndex'].forEach(id=>document.getElementById(id).value='');
+['titleInput','priceInput','cityInput','phoneInput','descInput','editIndex'].forEach(id=>document.getElementById(id).value='');
 document.getElementById('imageInput').value='';
 document.getElementById('formTitle').textContent='Жарыя кошуу';
 document.getElementById('catSelect').value='Телефон';
 toggleCarFields()
 }
 
-function loginAdmin(){if(val('adminPasswordInput')==='7777'){isAdminLoggedIn=true;adminLoginArea.style.display='none';adminStatusArea.style.display='block';alert('Админ режими күйдү')}else alert('Пароль туура эмес!')}
+function loginAdmin(){
+    if(val('adminPasswordInput')==='7777'){
+        isAdminLoggedIn=true;
+        adminLoginArea.style.display='none';
+        adminStatusArea.style.display='block';
+        alert('Админ режими күйдү! Эми жарыяларга кирип VIP статус бере аласыз.');
+    } else {
+        alert('Пароль туура эмес!');
+    }
+}
 function logoutAdmin(){isAdminLoggedIn=false;adminLoginArea.style.display='block';adminStatusArea.style.display='none'}
 function val(id){return document.getElementById(id).value.trim()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}

@@ -281,7 +281,7 @@ body {
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-.call-btn, .chat-btn-action, .whatsapp-share-btn {
+.call-btn, .chat-btn-action {
     display: block;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
@@ -299,10 +299,6 @@ body {
 .chat-btn-action {
     background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-.whatsapp-share-btn {
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
 
 .admin-actions {
@@ -536,7 +532,7 @@ body {
         <h2>Профиль жана Админ</h2>
         <p style="color: #4b5563;">VIP кызмат боюнча байланышуу: <b>+996 998 270 997</b></p>
         <div id="adminLoginArea" style="margin-top: 15px;">
-            <input id="adminPasswordInput" type="password" placeholder="Админ пароль (7777)" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 80%; max-width: 250px;"><br><br>
+            <input id="adminPasswordInput" type="password" placeholder="Паролду киргизиңиз" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 80%; max-width: 250px;"><br><br>
             <button class="button filter-btn" onclick="loginAdmin()">Кирүү</button>
         </div>
         <div id="adminStatusArea" style="display:none; margin-top: 15px;">
@@ -575,7 +571,7 @@ function save(){
 try {
     localStorage.setItem(KEY,JSON.stringify(adsData));
 } catch(e) {
-    alert("Эс тутум толду! Эски жарыяларды өчүрүңүз.");
+    alert("Эс тутум толду! Эски жарыяларды өчүрүңүз же азыраак сүрөт жүктөңүз.");
 }
 }
 function saveChats(){localStorage.setItem(CHAT_KEY,JSON.stringify(chatsData))}
@@ -642,33 +638,15 @@ let adminBtns = isAdminLoggedIn ?
 document.getElementById('detailContent').innerHTML=
     vipBadgeHtml+
     '<div class="detail-images">'+imgs+'</div>'+
-    '<h2>'+esc(a.title)+'</h2>'+
+    '## '+esc(a.title)+''+
     '<p class="price">'+esc(a.priceStr)+'</p>'+
     '<p>📍 '+esc(a.city)+'</p>'+car+
     '<p>'+esc(a.desc)+'</p>'+
-    '<button class="whatsapp-share-btn" onclick="shareToWhatsApp('+i+')">🟢 WhatsApp\'ка бөлүшүү (Группаларга жөнөтүү)</button>'+
     '<button class="chat-btn-action" onclick="startChatWithSeller('+i+')">💬 Ээсине СМС жазуу (Баасын суроо)</button>'+
     '<a class="call-btn" href="tel:'+esc(a.phone)+'">📞 '+esc(a.phone)+' — Чалуу</a>'+
     '<div class="admin-actions">'+adminBtns+'</div>';
 
 switchPage('detailScreen')
-}
-
-/* WhatsApp'ка бөлүшүү функциясы */
-function shareToWhatsApp(i){
-    let a = adsData[i];
-    let carInfo = a.carDetails ? `\n🚗 Унаа: ${a.carDetails.brand} ${a.carDetails.model} (${a.carDetails.year}-жыл, ${a.carDetails.steering})` : '';
-    
-    let text = `📢 *ЖАРАЯ:* ${a.title}\n` +
-               `💰 *Баасы:* ${a.priceStr}\n` +
-               `📍 *Шаар:* ${a.city||'Кыргызстан'}` +
-               `${carInfo}\n` +
-               `📝 *Маалымат:* ${a.desc||''}\n\n` +
-               `📞 *Байланыш:* ${a.phone}\n\n` +
-               `📲 *LeyReklama тиркемеси аркылуу жөнөтүлдү*`;
-
-    let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
 }
 
 /* VIP кабыл алуу логикасы */
@@ -768,7 +746,7 @@ document.getElementById('formTitle').textContent='Жарыяны өзгөртү�
 switchPage('addAdScreen')
 }
 
-// Сүрөттү кичирейтүү
+// Сүрөттү автоматтык түрдө кичирейтүү жана кысуу (жоголуп кетпөөсү үчүн)
 function compressImage(file) {
     return new Promise((resolve) => {
         let reader = new FileReader();
@@ -778,7 +756,7 @@ function compressImage(file) {
             img.src = e.target.result;
             img.onload = () => {
                 let canvas = document.createElement('canvas');
-                let maxWidth = 600;
+                let maxWidth = 450;
                 let scale = maxWidth / img.width;
                 
                 if (scale < 1) {
@@ -791,7 +769,7 @@ function compressImage(file) {
 
                 let ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                resolve(canvas.toDataURL('image/jpeg', 0.6));
+                resolve(canvas.toDataURL('image/jpeg', 0.5));
             };
         };
     });
@@ -835,7 +813,7 @@ toggleCarFields()
 }
 
 function loginAdmin(){
-    if(val('adminPasswordInput')==='7777'){
+    if(val('adminPasswordInput')==='LeyAdmin2026'){
         isAdminLoggedIn=true;
         adminLoginArea.style.display='none';
         adminStatusArea.style.display='block';
